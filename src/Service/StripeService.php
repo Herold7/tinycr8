@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Service;
 
 use Stripe\Stripe;
@@ -8,6 +7,7 @@ use Stripe\Checkout\Session;
 
 class StripeService
 {
+
     public function makePayment(?string $apiKey, ?int $amount, ?string $product, ?string $email)
     {
         Stripe::setApiKey($apiKey);
@@ -20,14 +20,13 @@ class StripeService
             'submit_type' => 'pay',
             'billing_address_collection' => 'required',
             'line_items' => [[
-                # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
-                'price_data' => [ // Section des données du produit
+                'price_data' => [ // Section des données de produit
                     'currency' => 'eur',
                     'product_data' => [
                         'name' => $product, // Nom de l'offre
                     ],
-                    'unit_amount' => $amount * 100, // Le montant est en centimes
-                ],                
+                    'unit_amount' => $amount * 100, // Montant en centimes
+                ],
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
@@ -39,6 +38,6 @@ class StripeService
         ]);
 
         header("HTTP/1.1 303 See Other");
-        header("Location: " . $checkout_session->url);
+        return $checkout_session->url;
     }
 }
