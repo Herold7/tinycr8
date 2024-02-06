@@ -37,6 +37,10 @@ class Offre
     #[ORM\ManyToMany(targetEntity: Client::class, inversedBy: 'offres')]
     private Collection $client;
 
+    #[ORM\ManyToOne(inversedBy: 'offres')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Transaction $paiement = null;
+
     public function __construct()
     {
         $this->client = new ArrayCollection();
@@ -146,6 +150,18 @@ class Offre
     public function removeClient(Client $client): static
     {
         $this->client->removeElement($client);
+
+        return $this;
+    }
+
+    public function getPaiement(): ?Transaction
+    {
+        return $this->paiement;
+    }
+
+    public function setPaiement(?Transaction $paiement): static
+    {
+        $this->paiement = $paiement;
 
         return $this;
     }

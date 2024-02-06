@@ -35,10 +35,13 @@ class AppFixtures extends Fixture
         $clients = [];
 
         for ($i = 0; $i < 20; $i++) {
+            $nom = $faker->lastName();
+            $prenom = $faker->firstName();
             $client = new Client();
             $client->setNom($faker->lastName())
                 ->setPrenom($faker->firstName())
                 ->setTelephone($faker->phoneNumber())
+                // ->setEmail($prenom . '.' .$nom . '@' . $faker->safeEmailDomain())
                 ->setEmail($faker->email())
                 ->setAdresse($faker->streetAddress())
                 ->setCp($faker->postcode())
@@ -116,10 +119,12 @@ class AppFixtures extends Fixture
                     array_push($clientsActives, $client);
                 }
             }
+            $offre = $faker->randomElement($offresArray);
             $transaction = new Transaction();
             $transaction->setClient($faker->randomElement($clientsActives))
-                ->setMontant($faker->randomElement([1000, 2000, 3000, 5000]))
-                ->setStatut('Payé')
+                ->addOffre($offre)
+                ->setMontant($offre->getMontant())
+                ->setStatut($faker->randomElement(['payé', 'En attente', 'Non payé']))
                 ->setDate($date)
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date);
