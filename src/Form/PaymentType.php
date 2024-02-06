@@ -17,9 +17,9 @@ class PaymentType extends AbstractType
         $builder
             ->add('client', EntityType::class, [
                 'class' => Client::class,
-                'choice_label' => 'nomcomplet',
+                'choice_label' => 'nomComplet',
             ])
-            ->add('client', EntityType::class, [
+            ->add('offre', EntityType::class, [
                 'class' => Offre::class,
                 'choice_label' => 'titre',
             ])

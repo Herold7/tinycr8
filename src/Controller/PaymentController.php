@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\PaymentType;
 use App\Service\StripeService;
+use Symfony\Component\Mime\Email;
 use App\Repository\OffreRepository;
 use App\Repository\ClientRepository;
 use App\Repository\TransactionRepository;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[Route('/payment')]
 class PaymentController extends AbstractController
@@ -21,15 +23,15 @@ class PaymentController extends AbstractController
         StripeService $stripeService,
         OffreRepository $offres,
         ClientRepository $clients,
+        MailerInterface $mailer,
         TransactionRepository $transactions
-        ): Response
-    {
+    ): Response {
 
         $form = $this->createForm(PaymentType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $offre = $offres->findOneBy(['id' => $data['offre']->getId()]); // Offre à vendre (titre et montant)
+            $offre = $offres->findOneBy(['id' => $data['offre']->getId()]); // Offre à vendre (titre et montant);
             $clientEmail = $clients->findOneBy(['id' => $data['client']->getId()])->getEmail();
             $apiKey = $this->getParameter('STRIPE_API_KEY_SECRET'); // Clé API secrète
             $link = $stripeService->makePayment(
@@ -38,7 +40,25 @@ class PaymentController extends AbstractController
                 $offre->getTitre(),
                 $clientEmail
             );
-// Envoie du lien au client
+            // Envoie du lien au client
+            $email = (new Email())
+                ->from('hello@tynicrm.app')
+                ->to($clientEmail)
+                ->priority(Email::PRIORITY_HIGH)
+                ->subject('Merci de procéder au paiement de votre offre')
+                ->html('<div style="background-color: #F4F4F4; padding: 20px; text-align: center;">
+            <h1>Bonjour !</h1><br><br>
+            <p>Voici le lien afin d\'effectuer le paiement de votre offre :</p><br>
+            <a href="' . $link . '"}" target="_blank">Payer</a><br>
+            <hr>
+            <p>Ce lien est valable pour une durée limitée.</p><br>
+            </div>
+            ');
+            $mailer->send($email);
+
+            // $transactions = new transaction();
+            // $transactions->setClient
+
         }
 
         return $this->render('payment/index.html.twig', [
