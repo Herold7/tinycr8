@@ -63,6 +63,7 @@ class PaymentController extends AbstractController
 
             $transaction = new Transaction();
             $transaction->setClient($data['client'])
+            ->addOffre($offre)
             ->setMontant($offre->getMontant())
             ->setStatut('En attente')
             ;
@@ -76,44 +77,47 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/success', name: 'payment_success')]
-    public function success(): Response
+    public function success(
+        TransactionRepository $transactions,
+        EntityManagerInterface $em
+    ): Response
     {
-$stripe = new \Stripe\StripeClient('sk_test_...');
-$endpoint_secret = 'whsec_c4c298b2018308154744a9cd9e9d60af46c16d2697f157f698795c34a2de945c';
-$payload = @file_get_contents('php://input');
-$sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-$event = null;
+// $stripe = new \Stripe\StripeClient('sk_test_...');
+// $endpoint_secret = 'whsec_c4c298b2018308154744a9cd9e9d60af46c16d2697f157f698795c34a2de945c';
+// $payload = @file_get_contents('php://input');
+// $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+// $event = null;
 
-        try {
-            $event = \Stripe\Webhook::constructEvent(
-                $payload,
-                $sig_header,
-                $endpoint_secret
-            );
-        } catch (\UnexpectedValueException $e) {
-            // Invalid payload
-            http_response_code(400);
-            exit();
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
-            http_response_code(400);
-            exit();
+//         try {
+//             $event = \Stripe\Webhook::constructEvent(
+//                 $payload,
+//                 $sig_header,
+//                 $endpoint_secret
+//             );
+//         } catch (\UnexpectedValueException $e) {
+//             // Invalid payload
+//             http_response_code(400);
+//             exit();
+//         } catch (\Stripe\Exception\SignatureVerificationException $e) {
+//             // Invalid signature
+//             http_response_code(400);
+//             exit();
 
-            switch ($event->type) {
-                case 'payment_intent.succeeded':
-                    $paymentIntent = $event->data->object;
-                    // ... handle other event types
-                default:
-                    echo 'Received unknown event type ' . $event->type;
-            }
+//             switch ($event->type) {
+//                 case 'payment_intent.succeeded':
+//                     $paymentIntent = $event->data->object;
+//                     // ... handle other event types
+//                 default:
+//                     echo 'Received unknown event type ' . $event->type;
+//             }
 
-http_response_code(200);
+// http_response_code(200);
 
         return $this->render('payment/success.html.twig', [
             'controller_name' => 'PaymentController',
         ]);
     }
-}
+
     #[Route('/cancel', name: 'payment_cancel')]
     public function cancel(): Response
     {

@@ -39,7 +39,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Transaction', 'fa fa-euro', Transaction::class);
         yield MenuItem::section('Gestion de contenu');
         yield MenuItem::linkToCrud('Les articles', 'fa fa-newspaper', Article::class);
-
+        yield MenuItem::linkToRoute('Émission paiements', 'fa fa-envelope', 'app_payment');
         yield MenuItem::section('Paramètres');
         yield MenuItem::linkToCrud('Comptes', 'fa fa-user', User::class);
         yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
