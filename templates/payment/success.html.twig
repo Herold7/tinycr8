@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paiement non validé{% endblock %}
+{% block title %}Paiement validé{% endblock %}
 
 {% block body %}
-<h1>Paiement validé</h1>
-<p>Félicitations.Votre paiement à bien été validé.</p>
-
+	<img src={{ asset('images/logo.png') }} alt="Logo TinyCRM" width="200">
+	<h1>Paiement validé</h1>
+	<p>
+		Félicitations. Votre paiement à bien été validé.
+    </p>
 {% endblock %}
