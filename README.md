@@ -144,3 +144,14 @@ Role: Administrateur (ROLE_ADMIN)
 - En tant qu'administrateur, je veux pouvoir supprimer une offre.
 - En tant qu'administrateur, je veux pouvoir emettre une demande de paiement pour une offre.
 - En tant qu'administrateur, je veux pouvoir emettre une facture pour un prospect.
+
+Déploiement sur un hébergement mutualisé
+
+Exemple avec o2switch, première chose à vérifier sont :
+
+la ou les version de PHP disponible
+le système de gestion de base de données disponible
+l'accès SSH ou à un terminal dans le panel
+avoir composer d'installé pour les dépendances
+avoir git d'installé si on veut cloner le projet
+Rendez-vous sur SymGuide et suivez les étapes pour le déploiement de l'application.
