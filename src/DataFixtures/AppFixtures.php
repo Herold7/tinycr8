@@ -38,11 +38,10 @@ class AppFixtures extends Fixture
             $nom = $faker->lastName();
             $prenom = $faker->firstName();
             $client = new Client();
-            $client->setNom($faker->lastName())
-                ->setPrenom($faker->firstName())
+            $client->setNom($nom)
+                ->setPrenom($prenom)
                 ->setTelephone($faker->phoneNumber())
-                // ->setEmail($prenom . '.' .$nom . '@' . $faker->safeEmailDomain())
-                ->setEmail($faker->email())
+                ->setEmail($prenom . '.' .$nom . '@' . $faker->safeEmailDomain())
                 ->setAdresse($faker->streetAddress())
                 ->setCp($faker->postcode())
                 ->setVille($faker->city())
